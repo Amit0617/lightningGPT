@@ -3,29 +3,37 @@ import openai
 import sys
 import os
 from pyln.client import Plugin
-
+# from lightning import Plugin
 plugin = Plugin()
 
+# plugin.add_option("advice", "Read logs and suggest other advices for working with lightning-cli")
+# plugin.add_option("help", "Tell you appropriate commands for your query")
+
 class LightningError(Exception):
-  pass
+  """Exception raised when there is an error in the lightningGPT plugin."""
+  plugin.log("LightningGPT error: {}".format(sys.exc_info()[1]))
 
-# @plugin.init()
-# def init(plugin, options, **kwargs):
+@plugin.init()
+def init(plugin, options, **kwargs):
   if not os.environ['OPENAI_API_KEY']:
-    # raise LightningError("Set your OPENAI_API_KEY in the Secrets in Tools Section of your replit")
+    raise LightningError("Set your OPENAI_API_KEY in the Secrets in Tools Section of your replit")
     sys.exit(1)
-  # else:
-    # plugin.log("OPENAI_API_KEY detected as environment variable 🎉 ")
-  # plugin.log("LightningGPT plugin intialized...")
-
-text=""
-file_paths=["/home/runner/Sauron-Build-Core-Lightning-Plugins-on-Replit/plugins/lightningGPT/cheatsheet.md"]
-for file_path in file_paths:
-  with open(file_path, "r", encoding="utf-8") as file:
-    text += file.read()
+  else:
+    plugin.log("OPENAI_API_KEY detected as environment variable 🎉 ")
+  plugin.log("LightningGPT plugin intialized...")
 
 
-query = f"""You are a ligtningNodeGPT, friendly and helpful AI assistant by Amit0617 that provides help with operating lightning nodes for btc. You give thorough answers with command examples if possible.
+@plugin.method("help")
+def help(plugin,command=None, *args):
+  """Gives you appropriate commands or help for your query"""
+  
+  text=""
+  file_paths=[f"{os.path.realpath(os.path.dirname(__file__))}"+"/cheatsheet.md"]
+  for file_path in file_paths:
+    with open(file_path, "r", encoding="utf-8") as file:
+      text += file.read()
+    
+  query = f"""You are a ligtningNodeGPT, friendly and helpful AI assistant by Amit0617 that provides help with operating lightning nodes for btc. You give thorough answers with command examples if possible.
 
 QUESTION: How to merge tables in pandas?
 =========
@@ -45,24 +53,24 @@ SOURCE:
 FINAL ANSWER: I am fine, thank you. How are you?
 SOURCES:
 
-Question: {sys.argv[1]}
+Question: {command}
 =========
-{text}
+CONTENT: {text}
+SOURCE: 
 =========
 FINAL ANSWER:
 
 """
-
-# @plugin.method("helpme")
-# def helpme(plugin,command=None, *args):
+  response = openai.ChatCompletion.create(
+      messages=[
+          {'role': 'system', 'content': 'You answer questions about the lightning'},
+          {'role': 'user', 'content': query},
+      ],
+      model='gpt-3.5-turbo',
+      temperature=0,
+  )
   
-response = openai.ChatCompletion.create(
-    messages=[
-        {'role': 'system', 'content': 'You answer questions about the lightning'},
-        {'role': 'user', 'content': query},
-    ],
-    model='gpt-3.5-turbo',
-    temperature=0,
-)
+  print(response['choices'][0]['message']['content'])
 
-print(response['choices'][0]['message']['content'])
+# if __name__ == '__main__':
+plugin.run()
