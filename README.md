@@ -1,6 +1,13 @@
 # lightningGPT
 Get assisted or ask for help for operating lightning client within console
 
+### Installation
+```bash
+git clone https://github.com/amit0617/lightningGPT
+cd lightningGPT
+pip3 install -r requirements.txt
+```
+
 ### StartUp
 ```bash
 lightning-cli plugin start /path/to/lightningGPT/lightningGPT.py
@@ -27,3 +34,7 @@ lightning-cli plugin stop /path/to/lightningGPT/lightningGPT.py
 It is currently trained on [cln-cheatsheet](https://github.com/grubles/cln-cheatsheet) and [lightning FAQ](https://lightning.readthedocs.io/FAQ.html) section.
 
 It is currently in MVP stage, for future references embeddings will be created for the markdown files of lightning [docs](https://github.com/ElementsProject/lightning/tree/master/doc). And only relevant section (by converting question into embedding and finding cosine similarity between the question and docs embeddings) would be used for prompting the GPT.
+
+### Acknowledgments
+
+I would like to express our gratitude to the creators of the "cln-cheatsheet" and the "lightning FAQ" section for providing valuable training data.
