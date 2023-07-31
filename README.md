@@ -1,5 +1,5 @@
 # lightningGPT
-Get assisted or ask for help for operating lightning client within console
+Get assisted or ask for help for operating lightning client within console. It is currently in the "Minimum Viable Product" (MVP) stage and is powered by the OPENAI GPT language model. The system leverages [**few-shot learning**](https://github.com/openai/openai-cookbook/blob/main/how_to_work_with_large_language_models.md#demonstration-prompt-example-few-shot-learning) to achieve accurate results even with limited training data.
 
 ### Installation
 ```bash

@@ -23,8 +23,8 @@ def init(plugin, options, **kwargs):
   plugin.log("LightningGPT plugin intialized...")
 
 
-@plugin.method("help")
-def help(plugin,command=None, *args):
+@plugin.method("helpGPT")
+def helpGPT(plugin,command=None, *args):
   """Gives you appropriate commands or help for your query"""
   
   text=""
@@ -55,8 +55,7 @@ SOURCES:
 
 Question: {command}
 =========
-CONTENT: {text}
-SOURCE: 
+{text}
 =========
 FINAL ANSWER:
 
